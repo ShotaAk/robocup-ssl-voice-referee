@@ -5,6 +5,8 @@ from pathlib import Path
 import yaml
 import argparse
 import socket
+import ssl_gc_referee_message_pb2
+import time
 
 def text_to_voice(text="テストです", speaker_id=1):
 
@@ -65,11 +67,6 @@ def load_speech_scripts(target_dir='speech_scripts'):
 
     return speech_script_dict
 
-def main():
-    pass
-
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--addr',
@@ -85,7 +82,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
     # Avoid error 'Address already in use'.
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     # Construct a membership_request
@@ -95,12 +91,26 @@ if __name__ == "__main__":
         socket.IP_ADD_MEMBERSHIP, membership_request)
     # Bind the socket to an interfaces
     sock.bind((args.addr, args.port))
-    # # Set non-blocking receiving mode
 
+    speech_scripts = load_speech_scripts()
+
+    prev_command_count = -1
     while True:
         rcv_data, addr = sock.recvfrom(1024)
-        print("receive data : [{}]  from {}".format(rcv_data,addr))
+        referee_msg = ssl_gc_referee_message_pb2.Referee()
+        referee_msg.ParseFromString(rcv_data)
+
+        # コマンドが更新されたらテキストを読み上げる
+        if prev_command_count != referee_msg.command_counter:
+            prev_command_count = referee_msg.command_counter
+            command = referee_msg.command
+
+            if command in speech_scripts.keys():
+                for text in speech_scripts[command].get_texts():
+                    text_to_voice(text)
+                    time.sleep(1)  # 休みなく読み上げることを防ぐ
+                    
+            else:
+                print('コマンド:{}に対応した原稿がありません'.format(command))
 
     sock.close()
-
-    main()

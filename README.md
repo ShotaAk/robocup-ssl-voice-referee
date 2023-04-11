@@ -31,7 +31,7 @@ $ ~/.voicevox/VOICEVOX.AppImage
 ### Python modules
 
 ```sh
-$ sudo apt install python3-simpleaudio
+$ sudo apt install python3-simpleaudio python3-protobuf
 $ pip install simpleaudio
 ```
 
