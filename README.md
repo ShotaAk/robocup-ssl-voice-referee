@@ -35,6 +35,21 @@ $ sudo apt install python3-simpleaudio python3-protobuf
 $ pip install simpleaudio
 ```
 
+## Usage
+
+Launch the VOICEVOX app:
+
+```sh
+$ ~/.voicevox/VOICEVOX.AppImage
+```
+
+then bellow command:
+
+```sh
+$ cd path/to/robocup-ssl-voice-referee
+$ python3 main.py
+```
+
 
 ## LICENSE
 
