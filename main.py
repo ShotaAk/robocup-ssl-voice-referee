@@ -38,16 +38,12 @@ def text_to_voice(text="テストです", speaker_id=1):
     play_obj.wait_done()
 
 class SpeechScript:
-    def __init__(self, command, stage, texts):
+    def __init__(self, command, texts):
         self._target_command = command
-        self._target_stage = stage
         self._texts = texts
 
     def get_target_command(self):
         return self._target_command
-
-    def get_target_stage(self):
-        return self._target_stage
 
     def get_texts(self):
         return self._texts
@@ -61,7 +57,7 @@ def load_speech_scripts(target_dir='speech_scripts'):
             obj = yaml.safe_load(file)
             if obj['ignore']:
                 continue
-            script = SpeechScript(obj['command'], obj['stage'], obj['texts'])
+            script = SpeechScript(obj['command'], obj['texts'])
 
             speech_script_dict[script.get_target_command()] = script
 
