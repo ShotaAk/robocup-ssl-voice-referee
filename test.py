@@ -3,6 +3,8 @@ import urllib.parse
 import simpleaudio
 from pathlib import Path
 import yaml
+import argparse
+import socket
 
 def text_to_voice(text="テストです", speaker_id=1):
 
@@ -64,8 +66,41 @@ def load_speech_scripts(target_dir='speech_scripts'):
     return speech_script_dict
 
 def main():
+    pass
 
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--addr',
+        type=str,
+        default='224.5.23.1', help='Set IP address to receive referee command.',
+        required=False,
+        )
+    parser.add_argument('--port',
+        type=int,
+        default=10003, help='Set IP port to receive referee command.',
+        required=False,
+        )
+    args = parser.parse_args()
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    # Avoid error 'Address already in use'.
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    # Construct a membership_request
+    membership_request = socket.inet_aton(args.addr) + socket.inet_aton('0.0.0.0')
+    # Send add membership request to socket
+    sock.setsockopt(socket.IPPROTO_IP, 
+        socket.IP_ADD_MEMBERSHIP, membership_request)
+    # Bind the socket to an interfaces
+    sock.bind((args.addr, args.port))
+    # # Set non-blocking receiving mode
+
+    while True:
+        rcv_data, addr = sock.recvfrom(1024)
+        print("receive data : [{}]  from {}".format(rcv_data,addr))
+
+    sock.close()
+
     main()
