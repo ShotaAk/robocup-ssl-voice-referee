@@ -9,33 +9,37 @@ import ssl_gc_referee_message_pb2
 import time
 
 def text_to_voice(text="テストです", speaker_id=1):
-
     # クエリ取得
     # TODO: request失敗時の例外処理を追加する
     url = "http://localhost:50021/audio_query?speaker=" \
         + str(speaker_id) \
         + "&text=" + urllib.parse.quote(text)
-
-    response = requests.post(url)
-    if response.status_code != 200:
-        return -1
-    query = response.json()
+    query = None
+    try:
+        response = requests.post(url)
+        response.raise_for_status()
+        query = response.json()
+    except requests.exceptions.RequestException as e:
+            print("    Error: can not get query because:{}".format(e))
+            return False
 
     # wav取得
-    # TODO: request失敗時の例外処理を追加する
     url = "http://localhost:50021/synthesis?speaker=" + str(speaker_id)
-    response = requests.post(url, json=query)
-    if response.status_code != 200:
-        return -1
-    
     file_name = 'output.wav'
     wav_path = Path(file_name)
-    wav_path.write_bytes(response.content)
+    try:
+        response = requests.post(url, json=query)
+        response.raise_for_status()
+        wav_path.write_bytes(response.content)
+    except requests.exceptions.RequestException as e:
+            print("    Error: can not get wav data because:{}".format(e))
+            return False
 
     # 再生
     wav_obj = simpleaudio.WaveObject.from_wave_file(file_name)
     play_obj = wav_obj.play()
     play_obj.wait_done()
+    return True
 
 class SpeechScript:
     def __init__(self, command, texts):
@@ -77,6 +81,16 @@ if __name__ == "__main__":
         )
     args = parser.parse_args()
 
+    print("Start Robocup SSL Voice Referee")
+    print("    Usage: Ctrl-C to exit\n")
+
+    print("Check VOICEVOX connection...")
+    if text_to_voice(""):
+        print("    OK\n")
+    else:
+        print("Exit.")
+        exit(1)
+
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # Avoid error 'Address already in use'.
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -90,23 +104,30 @@ if __name__ == "__main__":
 
     speech_scripts = load_speech_scripts()
 
+    print("Waiting for referee command...")
     prev_command_count = -1
-    while True:
-        rcv_data, addr = sock.recvfrom(1024)
-        referee_msg = ssl_gc_referee_message_pb2.Referee()
-        referee_msg.ParseFromString(rcv_data)
+    try:
+        while True:
+            rcv_data, addr = sock.recvfrom(1024)
+            referee_msg = ssl_gc_referee_message_pb2.Referee()
+            referee_msg.ParseFromString(rcv_data)
 
-        # コマンドが更新されたらテキストを読み上げる
-        if prev_command_count != referee_msg.command_counter:
-            prev_command_count = referee_msg.command_counter
-            command = referee_msg.command
+            # コマンドが更新されたらテキストを読み上げる
+            if prev_command_count != referee_msg.command_counter:
+                prev_command_count = referee_msg.command_counter
+                command = referee_msg.command
 
-            if command in speech_scripts.keys():
-                for text in speech_scripts[command].get_texts():
-                    text_to_voice(text)
-                    time.sleep(1)  # 休みなく読み上げることを防ぐ
-                    
-            else:
-                print('コマンド:{}に対応した原稿がありません'.format(command))
+                if command in speech_scripts.keys():
+                    for text in speech_scripts[command].get_texts():
+                        print("Play text: {}".format(text))
+                        text_to_voice(text)
+                        time.sleep(1)  # 休みなく読み上げることを防ぐ
+                        
+                else:
+                    print('コマンド:{}に対応した原稿がありません'.format(command))
+    except KeyboardInterrupt:
+        pass
 
     sock.close()
+    print("\nExit.")
+    exit(0)
