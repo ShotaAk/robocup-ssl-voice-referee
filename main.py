@@ -8,6 +8,26 @@ from speech_script import load_speech_scripts
 from referee_receiver import RefereeReceiver
 
 
+def main(ref_receiver, speech_scripts):
+    prev_command_count = -1
+    while True:
+        referee_msg = ref_receiver.get_referee_message()
+
+        # コマンドが更新されたらテキストを読み上げる
+        if prev_command_count != referee_msg.command_counter:
+            prev_command_count = referee_msg.command_counter
+            command = referee_msg.command
+
+            if command in speech_scripts.keys():
+                for text in speech_scripts[command].get_texts():
+                    print("Play text: {}".format(text))
+                    text_to_voice(text)
+                    time.sleep(1)  # 休みなく読み上げることを防ぐ
+                    
+            else:
+                print('コマンド:{}に対応した原稿がありません'.format(command))
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--addr',
@@ -36,24 +56,8 @@ if __name__ == "__main__":
     speech_scripts = load_speech_scripts()
 
     print("Waiting for referee command...")
-    prev_command_count = -1
     try:
-        while True:
-            referee_msg = ref_receiver.get_referee_message()
-
-            # コマンドが更新されたらテキストを読み上げる
-            if prev_command_count != referee_msg.command_counter:
-                prev_command_count = referee_msg.command_counter
-                command = referee_msg.command
-
-                if command in speech_scripts.keys():
-                    for text in speech_scripts[command].get_texts():
-                        print("Play text: {}".format(text))
-                        text_to_voice(text)
-                        time.sleep(1)  # 休みなく読み上げることを防ぐ
-                        
-                else:
-                    print('コマンド:{}に対応した原稿がありません'.format(command))
+        main(ref_receiver, speech_scripts)
     except KeyboardInterrupt:
         pass
 
