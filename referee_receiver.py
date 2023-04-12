@@ -1,5 +1,7 @@
 import socket
-import ssl_gc_referee_message_pb2
+import sys
+sys.path.append("./proto")
+from proto import ssl_gc_referee_message_pb2
 
 class RefereeReceiver:
     def __init__(self, addr, port):

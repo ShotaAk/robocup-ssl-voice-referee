@@ -50,6 +50,9 @@ $ cd path/to/robocup-ssl-voice-referee
 $ python3 main.py
 ```
 
+## References:
+
+- RoboCup SSL Offical Protocol: https://github.com/RoboCup-SSL/ssl-game-controller/tree/master/proto
 
 ## LICENSE
 
