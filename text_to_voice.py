@@ -1,9 +1,10 @@
+import json
 from pathlib import Path
 import requests
 import simpleaudio
 import urllib.parse
 
-def text_to_voice(text="テストです", speaker_id=1):
+def text_to_voice(text="テストです", speaker_id=1, speed_scale=1.2, volume_scale=1.0):
     # クエリ取得
     url = "http://localhost:50021/audio_query?speaker=" \
         + str(speaker_id) \
@@ -16,6 +17,10 @@ def text_to_voice(text="テストです", speaker_id=1):
     except requests.exceptions.RequestException as e:
             print("    Error: can not get query because:{}".format(e))
             return False
+
+    # クエリ加工
+    query['speedScale'] = speed_scale
+    query['volumeScale'] = volume_scale
 
     # wav取得
     url = "http://localhost:50021/synthesis?speaker=" + str(speaker_id)
