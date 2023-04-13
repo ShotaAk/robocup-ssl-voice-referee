@@ -27,7 +27,7 @@ def text_to_voice_thread(stop_event):
         print("Play: {}".format(text))
         text_to_voice.play(text)
 
-def reset_queue():
+def reset_text_queue():
     global text_queue_has_reset
     while not text_queue.empty():
         text_queue.get()
@@ -35,6 +35,7 @@ def reset_queue():
 
 def main(speech_scripts):
     prev_command_count = -1
+    prev_stage = -1
     while True:
         referee_msg = ref_receiver.get_referee_message()
 
@@ -42,16 +43,20 @@ def main(speech_scripts):
         if prev_command_count != referee_msg.command_counter:
             prev_command_count = referee_msg.command_counter
             command = referee_msg.command
-            print("Referee command: {}".format(command))
+            stage = referee_msg.stage
+            print("Referee command: {}, stage: {}".format(command, stage))
+
+            reset_text_queue()
+
+            if prev_stage != stage:
+                prev_stage = stage
+                if speech_scripts.has_script_of_stage(stage):
+                    for text in speech_scripts.get_script_of_stage(stage):
+                        text_queue.put(text)
 
             if speech_scripts.has_script_of_command(command):
-                reset_queue()
-
                 for text in speech_scripts.get_script_of_command(command):
                     text_queue.put(text)
-            else:
-                print('コマンド:{}に対応した原稿がありません'.format(command))
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

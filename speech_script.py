@@ -22,7 +22,7 @@ class SpeechScripts:
         return self._command_scripts[command]
 
     def get_script_of_stage(self, stage):
-        return self._stage_scripts[command]
+        return self._stage_scripts[stage]
 
 
 def load_speech_scripts(target_dir='speech_scripts'):

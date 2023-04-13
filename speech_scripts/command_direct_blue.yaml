@@ -1,0 +1,8 @@
+ignore: false
+
+trigger: "command"
+command: 9
+
+texts: 
+  # - "青チームのダイレクトキックです"
+  - "インド"

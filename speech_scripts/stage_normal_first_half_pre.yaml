@@ -1,0 +1,7 @@
+ignore: false
+
+trigger: "stage"
+stage: 0
+
+texts: 
+  - "まもなく試合が開始されます"

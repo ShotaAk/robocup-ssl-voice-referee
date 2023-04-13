@@ -1,0 +1,7 @@
+ignore: false
+
+trigger: "command"
+command: 8
+
+texts: 
+  - "黄色チームのダイレクトキックです"

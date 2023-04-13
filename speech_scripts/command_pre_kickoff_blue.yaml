@@ -1,0 +1,7 @@
+ignore: false
+
+trigger: "command"
+command: 5
+
+texts: 
+  - "青チームのキックオフです"

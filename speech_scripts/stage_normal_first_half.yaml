@@ -1,0 +1,7 @@
+ignore: false
+
+trigger: "stage"
+stage: 1
+
+texts: 
+  - "試合開始です!"
