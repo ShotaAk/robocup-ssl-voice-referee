@@ -55,21 +55,31 @@ def main(speech_scripts):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--addr',
+    parser.add_argument('--referee_addr',
         type=str,
         default='224.5.23.1', help='Set IP address to receive referee command.',
         required=False,
         )
-    parser.add_argument('--port',
+    parser.add_argument('--referee_port',
         type=int,
         default=10003, help='Set IP port to receive referee command.',
         required=False,
         )
+    parser.add_argument('--voicevox_addr',
+        type=str,
+        default='localhost', help='Set IP address for VOICEVOX server.',
+        required=False,
+        )
+    parser.add_argument('--voicevox_port',
+        type=int,
+        default=50021, help='Set IP port for VOICEVOX server.',
+        required=False,
+        )
     args = parser.parse_args()
 
-    ref_receiver = RefereeReceiver(args.addr, args.port)
+    ref_receiver = RefereeReceiver(args.referee_addr, args.referee_port)
+    text_to_voice = TextToVoice(args.voicevox_addr, args.voicevox_port)
     speech_scripts = load_speech_scripts()
-    text_to_voice = TextToVoice()
     text_queue = Queue()
     text_queue_has_reset = False
 
@@ -77,6 +87,7 @@ if __name__ == "__main__":
     print("    Usage: Ctrl-C to exit\n")
 
     print("Check VOICEVOX connection...")
+    print("    Server address: {}, port: {}".format(args.voicevox_addr, args.voicevox_port))
     if text_to_voice.play(""):
         print("    OK\n")
     else:
@@ -88,6 +99,7 @@ if __name__ == "__main__":
     play_thread.daemon = True
     play_thread.start()
     print("Waiting for referee command...")
+    print("    Server address: {}, port: {}".format(args.referee_addr, args.referee_port))
     try:
         main(speech_scripts)
     except KeyboardInterrupt:

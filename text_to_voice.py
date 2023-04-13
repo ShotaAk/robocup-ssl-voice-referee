@@ -5,14 +5,15 @@ import simpleaudio
 import urllib.parse
 
 class TextToVoice():
-    def __init__(self):
+    def __init__(self, addr="localhost", port=50021):
         self._playing_obj = None
+        self._server_url = "http://" + addr + ":" + str(port)
 
     def _get_query(self, text, speaker_id):
         success = True
         query = None
 
-        url = "http://localhost:50021/audio_query?speaker=" \
+        url = self._server_url + "/audio_query?speaker=" \
             + str(speaker_id) \
             + "&text=" + urllib.parse.quote(text)
         try:
@@ -28,7 +29,7 @@ class TextToVoice():
     def _generate_wav_file(self, file_path, query, speaker_id):
         success = True
 
-        url = "http://localhost:50021/synthesis?speaker=" + str(speaker_id)
+        url = self._server_url + "/synthesis?speaker=" + str(speaker_id)
         wav_path = Path(file_path)
         try:
             response = requests.post(url, json=query)
