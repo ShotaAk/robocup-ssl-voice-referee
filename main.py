@@ -44,10 +44,10 @@ def main(speech_scripts):
             command = referee_msg.command
             print("Referee command: {}".format(command))
 
-            if command in speech_scripts.keys():
+            if speech_scripts.has_script_of_command(command):
                 reset_queue()
 
-                for text in speech_scripts[command].get_texts():
+                for text in speech_scripts.get_script_of_command(command):
                     text_queue.put(text)
             else:
                 print('コマンド:{}に対応した原稿がありません'.format(command))
@@ -96,8 +96,8 @@ if __name__ == "__main__":
 
     stop_event = threading.Event()
     play_thread = threading.Thread(target=text_to_voice_thread, args=(stop_event,))
-    play_thread.daemon = True
     play_thread.start()
+
     print("Waiting for referee command...")
     print("    Server address: {}, port: {}".format(args.referee_addr, args.referee_port))
     try:

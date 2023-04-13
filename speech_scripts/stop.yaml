@@ -1,13 +1,8 @@
-# これはサンプルなのでignore: trueしています
+ignore: false
 
-# trueでこのyamlファイルを無効化する
-ignore: false 
-
-# テキスト読み上げのトリガーとなるレフェリーコマンド
+trigger: "command"
 command: 1
 
-# 読み上げるテキスト
-# 複数指定した場合は連続で読み上げる
 texts: 
   - "ストップゲームです"
   - "ロボットたちはゆっくり動きましょう"
