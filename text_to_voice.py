@@ -60,3 +60,7 @@ class TextToVoice():
         if self._playing_obj:
             self._playing_obj.stop()
     
+    def is_playing(self):
+        if self._playing_obj:
+            return self._playing_obj.is_playing()
+        return False
