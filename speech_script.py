@@ -29,7 +29,7 @@ def load_speech_scripts(target_dir='speech_scripts'):
     # target_dirにあるすべてのyamlファイルを開き、原稿オブジェクトspeech_scriptsを作成する
     speech_scripts = SpeechScripts()
 
-    for path in Path(target_dir).glob('*.yaml'):
+    for path in Path(target_dir).glob('**/*.yaml'):
         with open(path) as file:
             obj = yaml.safe_load(file)
             if obj['ignore']:
