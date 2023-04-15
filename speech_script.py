@@ -1,4 +1,5 @@
 from functools import reduce
+from numbers import Number
 from pathlib import Path
 import yaml
 
@@ -19,10 +20,21 @@ class SpeechScript:
         parameters = []
         for param_str in self._parameters:
             param_str_list = param_str.split('.')
-            parameters.append(
-                reduce(lambda obj, attr: getattr(obj, attr),
-                       param_str_list, referee_msg))
+            param = reduce(lambda obj, attr: getattr(obj, attr),
+                           param_str_list, referee_msg)
+
+            param = self._negative_value_to_text(param)
+            parameters.append(param)
         return parameters
+
+    def _negative_value_to_text(self, value):
+        # -123という数値が正しく音声再生できなかったので、マイナス123のように変換する
+        if not isinstance(value, Number):
+            return value
+
+        if value < 0:
+            return 'マイナス' + str(abs(value))
+        return value
 
 class SpeechScripts:
     def __init__(self):
