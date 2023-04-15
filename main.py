@@ -51,11 +51,11 @@ def main(speech_scripts):
             if prev_stage != stage:
                 prev_stage = stage
                 if speech_scripts.has_script_of_stage(stage):
-                    for text in speech_scripts.get_script_of_stage(stage):
+                    for text in speech_scripts.get_script_of_stage(stage, referee_msg):
                         text_queue.put(text)
 
             if speech_scripts.has_script_of_command(command):
-                for text in speech_scripts.get_script_of_command(command):
+                for text in speech_scripts.get_script_of_command(command, referee_msg):
                     text_queue.put(text)
 
 if __name__ == "__main__":
