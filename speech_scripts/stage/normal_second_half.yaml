@@ -1,0 +1,7 @@
+ignore: false
+
+trigger: "stage"
+stage: 4
+
+texts: 
+  - "後半戦開始です"

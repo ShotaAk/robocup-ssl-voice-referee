@@ -1,0 +1,7 @@
+ignore: false
+
+trigger: "stage"
+stage: 13
+
+texts: 
+  - "試合終了です"

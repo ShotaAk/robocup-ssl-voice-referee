@@ -1,0 +1,8 @@
+ignore: false
+
+trigger: "stage"
+stage: 5
+
+texts: 
+  - "延長戦がはじまります"
+  - "各チームは延長戦に向けて準備をしてください"

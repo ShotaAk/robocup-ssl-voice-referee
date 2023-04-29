@@ -1,0 +1,8 @@
+ignore: false
+
+trigger: "stage"
+stage: 2
+
+texts: 
+  - "前半戦終了です"
+  - "各チームは後半戦に向けて準備をしてください"
