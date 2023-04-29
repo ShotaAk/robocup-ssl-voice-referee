@@ -5,30 +5,10 @@ RoboCup SSLのレフェリー信号に合わせて音声を再生するPythonソ
 ## Requirements
 
 - Ubuntu (x86 64 arch)
-- VOICEVOX
+- Docker
+  - [voicevox/voicevoix_engine](https://hub.docker.com/r/voicevox/voicevox_engine)
 
 ## Instalation
-
-### VOICEVOX
-
-Please see https://voicevox.hiroshiba.jp/product/zundamon/ for details.
-
-```sh
-# Install packages required for VOICEVOX
-$ sudo apt install p7zip fuse
-
-# Download VOICEVOX installer for linux.
-$ wget https://voicevox.hiroshiba.jp/static/b4e3b7fe1eceb58d763ad439d9c35ec7/linuxInstallCpu.sh
-$ chmod +x linuxInstallCpu.sh
-$ ./linuxInstallCpu.sh
-
-VOICEVOX has been installed under ~/.voicevox directory.
-
-# Example: launch VOICEVOX app
-$ ~/.voicevox/VOICEVOX.AppImage
-```
-
-### Python modules
 
 ```sh
 $ sudo apt install python3-pip python3-protobuf
@@ -37,10 +17,14 @@ $ pip install simpleaudio
 
 ## Usage
 
-Launch the VOICEVOX app:
+Launch the VOICEVOX engine:
 
 ```sh
-$ ~/.voicevox/VOICEVOX.AppImage
+# Launch CPU engine
+$ docker run --rm -it -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-ubuntu20.04-latest
+
+# or GPU engine
+$ docker run --rm --gpus all -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:nvidia-ubuntu20.04-latest
 ```
 
 then bellow command:
