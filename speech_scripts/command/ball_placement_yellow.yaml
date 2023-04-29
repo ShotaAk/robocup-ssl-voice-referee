@@ -1,0 +1,12 @@
+ignore: false
+
+trigger: "command"
+command: 16
+
+parameters:
+  - "designated_position.x"
+  - "designated_position.y"
+
+texts: 
+  - "きいろチームのボールプレースメントです"
+  - "X座標{0}、Y座標{1}にボールを運んでください"

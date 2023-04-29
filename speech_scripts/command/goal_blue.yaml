@@ -1,0 +1,8 @@
+ignore: false
+
+trigger: "command"
+command: 15
+
+texts: 
+  - "青チームのゴールです！！！"
+  - "青チームに一点はいりました"

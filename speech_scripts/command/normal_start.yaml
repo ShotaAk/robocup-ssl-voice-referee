@@ -1,0 +1,8 @@
+ignore: false
+
+trigger: "command"
+command: 2
+
+texts: 
+  - "スタートです"
+  - "ボールを蹴りましょう"

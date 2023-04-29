@@ -1,0 +1,7 @@
+ignore: false
+
+trigger: "command"
+command: 7
+
+texts: 
+  - "青チームのペナルティキックです"

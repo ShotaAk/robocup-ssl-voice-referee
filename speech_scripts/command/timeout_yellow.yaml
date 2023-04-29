@@ -1,0 +1,7 @@
+ignore: false
+
+trigger: "command"
+command: 12
+
+texts: 
+  - "きいろチームがタイムアウトを取りました"
