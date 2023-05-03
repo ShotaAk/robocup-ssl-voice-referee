@@ -1,0 +1,8 @@
+ignore: false
+
+trigger: "team_info"
+team_info: "yellow_cards"
+
+texts: 
+  - "{0}チームにイエローカードです"
+  - "{0}チームのイエローカードは{1}枚です"

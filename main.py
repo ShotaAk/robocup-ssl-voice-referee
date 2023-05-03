@@ -36,10 +36,32 @@ def reset_text_queue():
 def main(speech_scripts):
     prev_command_count = -1
     prev_stage = -1
+    TEAMS = ["blue", "yellow"]
+    TEAM_NAME_SCRIPT = {"blue": "あお", "yellow": "きいろ"}  # TODO:これもyamlファイルで設定したい
+    prev_team_info = {"blue": None, "yellow": None}
     while True:
         referee_msg = ref_receiver.get_referee_message()
 
-        # コマンドが更新されたらテキストを読み上げる
+        # チーム情報の更新確認
+        for team in TEAMS:
+            for trigger in speech_scripts.get_team_info_script_triggers():
+                if prev_team_info[team] is None:
+                    continue
+
+                if not hasattr(prev_team_info[team], trigger):
+                    print("team info has not member:{}".format(trigger))
+                    continue
+
+                prev_value = getattr(prev_team_info[team], trigger)
+                present_value = getattr(getattr(referee_msg, team), trigger)
+                if prev_value == present_value:
+                    continue
+
+                for text in speech_scripts.get_script_of_team_info(trigger, TEAM_NAME_SCRIPT[team], present_value):
+                    text_queue.put(text)
+            prev_team_info[team] = getattr(referee_msg, team)
+
+        # コマンドやステージが更新されたらテキストを読み上げる
         if prev_command_count != referee_msg.command_counter:
             prev_command_count = referee_msg.command_counter
             command = referee_msg.command

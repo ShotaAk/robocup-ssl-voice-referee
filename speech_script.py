@@ -13,6 +13,9 @@ class SpeechScript:
     def get_texts(self, referee_msg):
         # textsにセットされた文字列にformat処理を実行して返す
         parameters = self._extract_parameters(referee_msg)
+        return self.apply_parameters_to_texts(parameters)
+
+    def apply_parameters_to_texts(self, parameters):
         return list(map(lambda x: x.format(*parameters), self._texts))
 
     def _extract_parameters(self, referee_msg):
@@ -40,6 +43,7 @@ class SpeechScripts:
     def __init__(self):
         self._command_scripts = {}
         self._stage_scripts = {}
+        self._team_info_scripts = {}
 
     def append_command_script(self, command, texts, parameters):
         self._command_scripts[command] = SpeechScript(texts, parameters)
@@ -47,17 +51,30 @@ class SpeechScripts:
     def append_stage_script(self, stage, texts, parameters):
         self._stage_scripts[stage] = SpeechScript(texts, parameters)
 
+    def append_team_info_script(self, team_info, texts, parameters):
+        self._team_info_scripts[team_info] = SpeechScript(texts, parameters)
+
     def has_script_of_command(self, command):
         return command in self._command_scripts.keys()
 
     def has_script_of_stage(self, stage):
         return stage in self._stage_scripts.keys()
 
+    def has_script_of_team_info(self, team_info):
+        return team_info in self._team_info_scripts.keys()
+
     def get_script_of_command(self, command, referee_msg):
         return self._command_scripts[command].get_texts(referee_msg)
 
     def get_script_of_stage(self, stage, referee_msg):
         return self._stage_scripts[stage].get_texts(referee_msg)
+
+    def get_script_of_team_info(self, team_info, team="blue", value=""):
+        parameters = [team, value]
+        return self._team_info_scripts[team_info].apply_parameters_to_texts(parameters)
+
+    def get_team_info_script_triggers(self):
+        return self._team_info_scripts.keys()
 
 
 def load_speech_scripts(target_dir='speech_scripts'):
@@ -80,5 +97,9 @@ def load_speech_scripts(target_dir='speech_scripts'):
             if obj['trigger'] =='stage':
                 speech_scripts.append_stage_script(
                     obj['stage'], obj['texts'], parameters)
+
+            if obj['trigger'] =='team_info':
+                speech_scripts.append_team_info_script(
+                    obj['team_info'], obj['texts'], parameters)
 
     return speech_scripts
