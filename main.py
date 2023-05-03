@@ -57,6 +57,8 @@ def main(speech_scripts):
                 if prev_value == present_value:
                     continue
 
+                reset_text_queue()
+
                 for text in speech_scripts.get_script_of_team_info(trigger, TEAM_NAME_SCRIPT[team], present_value):
                     text_queue.put(text)
             prev_team_info[team] = getattr(referee_msg, team)
