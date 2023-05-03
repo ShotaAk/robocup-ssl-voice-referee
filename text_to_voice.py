@@ -5,9 +5,10 @@ import simpleaudio
 import urllib.parse
 
 class TextToVoice():
-    def __init__(self, addr="localhost", port=50021):
+    def __init__(self, addr="localhost", port=50021, no_voice=False):
         self._playing_obj = None
         self._server_url = "http://" + addr + ":" + str(port)
+        self._no_voice = no_voice  # Trueでデバッグ用の音声再生なしモード
 
     def _get_query(self, text, speaker_id):
         success = True
@@ -42,6 +43,10 @@ class TextToVoice():
         return success
 
     def play(self, text="", speaker_id=1, speed_scale=1.2, volume_scale=1.0):
+        if self._no_voice:
+            print("No Voice Mode: Play:{}".format(text))
+            return True
+
         success, query = self._get_query(text, speaker_id)
         if not success:
             return False

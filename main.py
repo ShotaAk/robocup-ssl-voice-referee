@@ -80,10 +80,11 @@ if __name__ == "__main__":
         default=50021, help='Set IP port for VOICEVOX server.',
         required=False,
         )
+    parser.add_argument('--no_voice', action='store_true')
     args = parser.parse_args()
 
     ref_receiver = RefereeReceiver(args.referee_addr, args.referee_port)
-    text_to_voice = TextToVoice(args.voicevox_addr, args.voicevox_port)
+    text_to_voice = TextToVoice(args.voicevox_addr, args.voicevox_port, args.no_voice)
     speech_scripts = load_speech_scripts()
     text_queue = Queue()
     text_queue_has_reset = False
