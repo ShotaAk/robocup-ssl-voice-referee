@@ -35,12 +35,12 @@ class SpeechScript:
         if not isinstance(value, Number):
             return value
 
+        # 数値をまるめる
+        value = round(value, 1)
+
         if value < 0:
             return 'マイナス' + str(abs(value))
 
-        # 数値をまるめる
-        value = round(value, 1)
-        
         return value
 
 class SpeechScripts:
