@@ -7,6 +7,7 @@ import time
 
 from text_to_voice import TextToVoice 
 from speech_script import load_speech_scripts
+from referee_parser import RefereeParser
 from referee_receiver import RefereeReceiver
 
 
@@ -34,52 +35,47 @@ def reset_text_queue():
     text_queue_has_reset = True
 
 def main(speech_scripts):
-    prev_command_count = -1
-    prev_stage = -1
-    TEAMS = ["blue", "yellow"]
     TEAM_NAME_SCRIPT = {"blue": "あお", "yellow": "きいろ"}  # TODO:これもyamlファイルで設定したい
-    prev_team_info = {"blue": None, "yellow": None}
+    ref_parser = RefereeParser()
     while True:
         referee_msg = ref_receiver.get_referee_message()
+        ref_parser.set_referee_msg(referee_msg)
 
         # チーム情報の更新確認
-        for team in TEAMS:
-            for trigger in speech_scripts.get_team_info_script_triggers():
-                if prev_team_info[team] is None:
-                    continue
+        for team in ref_parser.TEAM_LIST:
+            if not ref_parser.has_new_team_info(team):
+                continue
 
-                if not hasattr(prev_team_info[team], trigger):
+            team_info = ref_parser.get_team_info(team)
+
+            for trigger in speech_scripts.get_team_info_script_triggers():
+                if not hasattr(team_info, trigger):
                     print("team info has not member:{}".format(trigger))
                     continue
 
-                prev_value = getattr(prev_team_info[team], trigger)
-                present_value = getattr(getattr(referee_msg, team), trigger)
-                if prev_value == present_value:
-                    continue
+                present_value = getattr(team_info, trigger)
 
                 reset_text_queue()
-
                 for text in speech_scripts.get_script_of_team_info(trigger, TEAM_NAME_SCRIPT[team], present_value):
                     text_queue.put(text)
-            prev_team_info[team] = getattr(referee_msg, team)
 
         # コマンドやステージが更新されたらテキストを読み上げる
-        if prev_command_count != referee_msg.command_counter:
-            prev_command_count = referee_msg.command_counter
-            command = referee_msg.command
-            stage = referee_msg.stage
-            print("Referee command: {}, stage: {}".format(command, stage))
+        if ref_parser.has_new_command():
+            command = ref_parser.get_command()
+            print("command: {}".format(command))
 
             reset_text_queue()
-
-            if prev_stage != stage:
-                prev_stage = stage
-                if speech_scripts.has_script_of_stage(stage):
-                    for text in speech_scripts.get_script_of_stage(stage, referee_msg):
-                        text_queue.put(text)
-
             if speech_scripts.has_script_of_command(command):
                 for text in speech_scripts.get_script_of_command(command, referee_msg):
+                    text_queue.put(text)
+
+        if ref_parser.has_new_stage():
+            stage = ref_parser.get_stage()
+            print("stage: {}".format(stage))
+
+            reset_text_queue()
+            if speech_scripts.has_script_of_stage(stage):
+                for text in speech_scripts.get_script_of_stage(stage, referee_msg):
                     text_queue.put(text)
 
 if __name__ == "__main__":
