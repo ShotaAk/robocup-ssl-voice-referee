@@ -100,7 +100,9 @@ if __name__ == "__main__":
         default=50021, help='Set IP port for VOICEVOX server.',
         required=False,
         )
-    parser.add_argument('--no_voice', action='store_true')
+    parser.add_argument('--no_voice',
+        action='store_true',
+        help='Run this script without VOICEVOX.')
     args = parser.parse_args()
 
     ref_receiver = RefereeReceiver(args.referee_addr, args.referee_port)

@@ -27,11 +27,32 @@ $ docker run --rm -it -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-ub
 $ docker run --rm --gpus all -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:nvidia-ubuntu20.04-latest
 ```
 
-then bellow command:
+then execute bellow commands:
 
 ```sh
 $ cd path/to/robocup-ssl-voice-referee
 $ python3 main.py
+```
+
+### Options
+
+```sh
+$ python3 main.py --help
+usage: main.py [-h] [--referee_addr REFEREE_ADDR]
+               [--referee_port REFEREE_PORT] [--voicevox_addr VOICEVOX_ADDR]
+               [--voicevox_port VOICEVOX_PORT] [--no_voice]
+
+options:
+  -h, --help            show this help message and exit
+  --referee_addr REFEREE_ADDR
+                        Set IP address to receive referee command.
+  --referee_port REFEREE_PORT
+                        Set IP port to receive referee command.
+  --voicevox_addr VOICEVOX_ADDR
+                        Set IP address for VOICEVOX server.
+  --voicevox_port VOICEVOX_PORT
+                        Set IP port for VOICEVOX server.
+  --no_voice            Run this script without VOICEVOX.
 ```
 
 ## References:
