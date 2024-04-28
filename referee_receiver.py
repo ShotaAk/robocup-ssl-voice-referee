@@ -20,8 +20,11 @@ class RefereeReceiver:
         rcv_data, addr = self._sock.recvfrom(1024)
 
         referee_msg = ssl_gc_referee_message_pb2.Referee()
-        referee_msg.ParseFromString(rcv_data)
-        return referee_msg
+        try:
+            referee_msg.ParseFromString(rcv_data)
+        except Exception:
+            return False, referee_msg
+        return True, referee_msg
 
     def close(self):
         self._sock.close()

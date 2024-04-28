@@ -38,7 +38,9 @@ def main(speech_scripts):
     TEAM_NAME_SCRIPT = {"blue": "あお", "yellow": "きいろ"}  # TODO:これもyamlファイルで設定したい
     ref_parser = RefereeParser()
     while True:
-        referee_msg = ref_receiver.get_referee_message()
+        result, referee_msg = ref_receiver.get_referee_message()
+        if not result:
+            continue
         ref_parser.set_referee_msg(referee_msg)
 
         # チーム情報の更新確認
