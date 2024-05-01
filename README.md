@@ -10,9 +10,25 @@ RoboCup SSLのレフェリー信号に合わせて音声を再生するPythonソ
 
 ## Instalation
 
+Install dependencies:
+
 ```sh
-$ sudo apt install python3-pip python3-protobuf
-$ pip install simpleaudio
+sudo apt install python3-pip python3-protobuf
+pip install simpleaudio
+```
+
+Install `voiceref` directory:
+
+```sh
+pip install -v https://github.com/ShotaAk/robocup-ssl-voice-referee
+```
+
+(Optional) Install `voiceref` locally:
+
+```sh
+git clone https://github.com/ShotaAk/robocup-ssl-voice-referee
+cd robocup-ssl-voice-referee
+pip install -v .
 ```
 
 ## Usage
@@ -30,14 +46,19 @@ $ docker run --rm --gpus all -p '127.0.0.1:50021:50021' voicevox/voicevox_engine
 then execute bellow commands:
 
 ```sh
-$ cd path/to/robocup-ssl-voice-referee
-$ python3 main.py
+python3 -m voiceref.main
 ```
+
 
 ### Options
 
+Execute bellow command:
+
 ```sh
-$ python3 main.py --help
+python3 -m voiceref.main --help
+```
+
+```sh
 usage: main.py [-h] [--referee_addr REFEREE_ADDR]
                [--referee_port REFEREE_PORT] [--voicevox_addr VOICEVOX_ADDR]
                [--voicevox_port VOICEVOX_PORT] [--no_voice]
@@ -55,11 +76,10 @@ options:
   --no_voice            Run this script without VOICEVOX.
 ```
 
-## References:
+## References
 
 - RoboCup SSL Offical Protocol: https://github.com/RoboCup-SSL/ssl-game-controller/tree/master/proto
 
 ## LICENSE
 
 Apache License Version 2.0
-
