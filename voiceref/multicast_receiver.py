@@ -32,6 +32,5 @@ class MulticastReceiver:
         try:
             data, _ = self.sock.recvfrom(2048)
             return data
-        except Exception as e:
-            print(e)
-            print("Failed to receive message.")
+        except Exception:
+            pass

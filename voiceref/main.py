@@ -24,9 +24,13 @@ def main():
     print("Hello, World!")
 
     while True:
-        raw_referee = ref_parser.get_raw_referee()
+        stage = ref_parser.pop_stage()
+        command = ref_parser.pop_command()
+        if stage is not None:
+            print("Stage: {}".format(stage))
 
-        print("Stage: {}".format(raw_referee.stage))
+        if command is not None:
+            print("Command: {}".format(command))
         time.sleep(1)
 
 
@@ -51,13 +55,13 @@ if __name__ == "__main__":
     print("Start RoboCup SSL Voice Referee")
     print("    Usage: Ctrl-C to exit\n")
 
-    ref_parser.start_thread()
+    ref_parser.start_receiving()
 
     try:
         main()
     except KeyboardInterrupt:
         pass
 
-    ref_parser.stop_thread()
+    ref_parser.stop_receiving()
     print("\nExit.")
     exit(0)
