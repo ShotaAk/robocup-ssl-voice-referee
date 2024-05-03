@@ -18,20 +18,29 @@ import argparse
 import time
 
 from .referee_parser import RefereeParser
+from .speech_player import SpeechPlayer
+from .speech_script_generator import SpeechScriptGenerator
 
 
 def main():
     print("Hello, World!")
 
     while True:
-        stage = ref_parser.pop_stage()
-        command = ref_parser.pop_command()
-        if stage is not None:
-            print("Stage: {}".format(stage))
+        generator.set_raw_referee(ref_parser.get_raw_referee())
 
-        if command is not None:
-            print("Command: {}".format(command))
-        time.sleep(1)
+        speech_player.set_scripts(
+            generator.stage_scripts(ref_parser.pop_stage()))
+        
+        # speech_player.set_script(
+        #     speech_scripts.command_script(ref_parser.pop_command()))
+        
+        # speech_player.set_script(
+        #     speech_scripts.blue_team_info_script(ref_parser.pop_blue_team_info()))
+
+        # speech_player.set_script(
+        #     speech_scripts.yellow_team_info_script(ref_parser.pop_yellow_team_info()))
+
+        time.sleep(0.01)
 
 
 if __name__ == "__main__":
@@ -50,18 +59,23 @@ if __name__ == "__main__":
         )
     args = parser.parse_args()
 
+    speech_player = SpeechPlayer()
+    generator = SpeechScriptGenerator()
     ref_parser = RefereeParser(args.referee_addr, args.referee_port)
 
     print("Start RoboCup SSL Voice Referee")
     print("    Usage: Ctrl-C to exit\n")
 
     ref_parser.start_receiving()
+    speech_player.start_playing()
 
     try:
         main()
     except KeyboardInterrupt:
         pass
 
+    speech_player.stop_playing()
     ref_parser.stop_receiving()
+
     print("\nExit.")
     exit(0)

@@ -1,0 +1,15 @@
+
+ignore: true
+
+trigger: "command"
+trigger_type: "CHANGED"
+
+texts: 
+  ja:
+    - "パラメータをテキストに含めることもできます"
+    - "現在のCommandは{command}です"
+    - "{designated_position.x}と{designated_position.y}にボールを運んでください"
+  en:
+    - "You can also include parameters in the text"
+    - "The current Command is {command}"
+    - "Move the ball to {designated_position.x} and {designated_position.y}"

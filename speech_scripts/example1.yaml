@@ -1,0 +1,17 @@
+
+# Set 'true' to ignore this script
+ignore: true
+
+trigger: "stage"
+trigger_type: "MATCH"
+trigger_value: 1
+
+texts: 
+  ja:
+    - "読み上げられるテキストです"
+    - "複数行をセットすると"
+    - "順番に読み上げます"
+  en:
+    - "This is a text to read aloud"
+    - "If you set multiple lines"
+    - "It reads in order"

@@ -1,0 +1,15 @@
+
+ignore: true
+
+trigger: "TEAM_INFO.score"
+trigger_type: "CHANGED"
+
+texts: 
+  ja:
+    - "TEAM_IFNOは特別で、blueとyellowに解釈されます"
+    - "これにより、青、黄チーム共通でスクリプトを用意できます"
+    - "{TEAM}チームの得点は{TEAM_INFO.score}点です"
+  en:
+    - "TEAM_INFO is special and interpreted as blue and yellow"
+    - "This allows you to prepare scripts for blue and yellow teams in common"
+    - "The score of {TEAM} team is {TEAM_INFO.score}"
