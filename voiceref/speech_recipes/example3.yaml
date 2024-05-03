@@ -1,5 +1,5 @@
 
-ignore: true
+ignored: true
 
 trigger: "TEAM_INFO.score"
 trigger_type: "CHANGED"

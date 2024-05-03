@@ -15,6 +15,9 @@ setup(
     author='Shotak Aoki',
     author_email='macakasit@gmail.com',
     packages=find_packages(),
+    package_data={
+        'voiceref': ['speech_recipes/*.yaml']
+    },
     license='LICENSE',
     description='Voice player with RoboCup SSL Game Controller messages.',
     long_description=open('README.md').read(),

@@ -1,10 +1,10 @@
 
 # Set 'true' to ignore this script
-ignore: true
+ignored: true
 
-trigger: "stage"
-trigger_type: "MATCH"
-trigger_value: 1
+trigger: "stage"  # required
+trigger_type: "MATCH"  # required
+trigger_value: 1  # optional
 
 texts: 
   ja:

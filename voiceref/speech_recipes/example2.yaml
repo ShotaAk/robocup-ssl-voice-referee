@@ -1,5 +1,5 @@
 
-ignore: true
+ignored: true
 
 trigger: "command"
 trigger_type: "CHANGED"

@@ -21,6 +21,8 @@ from .referee_parser import RefereeParser
 from .speech_player import SpeechPlayer
 from .speech_script_generator import SpeechScriptGenerator
 
+import pkg_resources
+
 
 def main():
     print("Hello, World!")
@@ -57,11 +59,23 @@ if __name__ == "__main__":
         default=10003, help='Set IP port to receive referee command.',
         required=False,
         )
+    parser.add_argument(
+        '--recipes',
+        type=str,
+        default=pkg_resources.resource_filename('voiceref', 'speech_recipes/'),
+        help='Set directory path to load recipes.',
+        required=False,
+        )
     args = parser.parse_args()
 
     speech_player = SpeechPlayer()
     generator = SpeechScriptGenerator()
     ref_parser = RefereeParser(args.referee_addr, args.referee_port)
+
+    print("Load recipes from: ", args.recipes)
+    if not generator.load_recipes(args.recipes):
+        print("Failed to load recipes.")
+        exit(1)
 
     print("Start RoboCup SSL Voice Referee")
     print("    Usage: Ctrl-C to exit\n")
